@@ -1,0 +1,7 @@
+User-agent: Googlebot
+Disallow: /nogooglebot/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://hydrogen-starter-8a95933599cb5240ec76.o2.myshopify.dev/sitemap.xml

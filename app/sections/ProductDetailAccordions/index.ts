@@ -1,0 +1,1 @@
+export {ProductDetailAccordions} from './ProductDetailAccordions';

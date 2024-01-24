@@ -1,0 +1,20 @@
+import {useEffect} from 'react';
+
+export function useSetViewportHeightCssVar() {
+  useEffect(() => {
+    const setViewportHeight = () => {
+      const viewportHeight = `${window.innerHeight}px`;
+      document.documentElement.style.setProperty(
+        '--viewport-height',
+        viewportHeight,
+      );
+    };
+
+    window.addEventListener('resize', setViewportHeight);
+    setViewportHeight();
+
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+    };
+  }, []);
+}

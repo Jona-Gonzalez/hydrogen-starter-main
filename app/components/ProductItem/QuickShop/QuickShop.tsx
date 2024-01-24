@@ -1,0 +1,70 @@
+import {useMemo} from 'react';
+import {useSiteSettings} from '@pack/react';
+
+import {AddToCart} from '~/components';
+import {COLOR_OPTION_NAME} from '~/lib/constants';
+import {QuickShopOptions} from './QuickShopOptions';
+
+export function QuickShop({
+  enabledColorSelector,
+  selectedProduct,
+  selectedVariant,
+}) {
+  const siteSettings = useSiteSettings();
+  const {quickShopMultiText, quickShopSingleText} = {
+    ...siteSettings?.settings?.collection?.productItem,
+  };
+
+  const qualifiesForQuickShop = useMemo(() => {
+    if (!selectedProduct) return false;
+
+    const initialOptions = selectedProduct.isGrouped
+      ? selectedProduct.grouping.options
+      : selectedProduct.options;
+    const options = enabledColorSelector
+      ? initialOptions.filter((option) => option.name !== COLOR_OPTION_NAME)
+      : initialOptions;
+
+    const hasOnlySingleValueOptions =
+      options.every((option) => {
+        return option.values.length === 1;
+      }) || false;
+    const hasOnlyOneOptionWithMultipleValues =
+      options.reduce((acc, option) => {
+        return acc + (option.values.length > 1 ? 1 : 0);
+      }, 0) === 1 || false;
+    const hasColorOptionWithMultipleValues = enabledColorSelector
+      ? false
+      : selectedProduct.grouping?.optionsMap?.[COLOR_OPTION_NAME]?.length > 1 ||
+        false;
+
+    return (
+      (hasOnlySingleValueOptions || hasOnlyOneOptionWithMultipleValues) &&
+      !hasColorOptionWithMultipleValues
+    );
+  }, [enabledColorSelector, selectedProduct?.id]);
+
+  const hasOneVariant = selectedProduct?.variants?.nodes?.length === 1;
+
+  return qualifiesForQuickShop && selectedVariant ? (
+    <div className="mt-5 hidden opacity-0 transition group-hover:opacity-100 md:block lg:mt-6">
+      {hasOneVariant && (
+        <AddToCart
+          addToCartText={quickShopSingleText}
+          className="btn-inverse-dark"
+          selectedVariant={selectedVariant}
+        />
+      )}
+
+      {!hasOneVariant && (
+        <QuickShopOptions
+          quickShopMultiText={quickShopMultiText}
+          selectedProduct={selectedProduct}
+          selectedVariant={selectedVariant}
+        />
+      )}
+    </div>
+  ) : null;
+}
+
+QuickShop.displayName = 'QuickShop';

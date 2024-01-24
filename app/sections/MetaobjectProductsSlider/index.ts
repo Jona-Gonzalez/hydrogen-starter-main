@@ -1,0 +1,1 @@
+export {MetaobjectProductsSlider} from './MetaobjectProductsSlider ';

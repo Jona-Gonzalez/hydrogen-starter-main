@@ -1,0 +1,123 @@
+export const CART_FRAGMENT = `#graphql
+  fragment CartFragment on Cart {
+    id
+    checkoutUrl
+    createdAt
+    totalQuantity
+    note
+    updatedAt
+    __typename
+    buyerIdentity {
+      countryCode
+      customer {
+        id
+        email
+        firstName
+        lastName
+        displayName
+      }
+      email
+      phone
+    }
+    attributes {
+      key
+      value
+    }
+    cost {
+      subtotalAmount {
+        amount
+        currencyCode
+      }
+      totalAmount {
+        amount
+        currencyCode
+      }
+    }
+    discountCodes {
+      code
+    }
+    lines(first: $numCartLines) {
+      edges {
+        node {
+          id
+          quantity
+          cost {
+            amountPerQuantity {
+              amount
+              currencyCode
+            }
+            compareAtAmountPerQuantity {
+              amount
+              currencyCode
+            }
+            totalAmount {
+              amount
+              currencyCode
+            }
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+          }
+          attributes {
+            key
+            value
+          }
+          discountAllocations {
+            discountedAmount {
+              amount
+              currencyCode
+            }
+          }
+          merchandise {
+            ... on ProductVariant {
+              availableForSale
+              id
+              sku
+              title
+              compareAtPrice {
+                amount
+                currencyCode
+              }
+              image {
+                altText
+                height
+                id
+                url
+                width
+              }
+              price {
+                amount
+                currencyCode
+              }
+              product {
+                handle
+                id
+                productType
+                title
+                vendor
+                options {
+                  name
+                  values
+                }
+                images(first: 20) {
+                  nodes {
+                    altText
+                    height
+                    id
+                    url
+                    width
+                  }
+                }
+              }
+              selectedOptions {
+                name
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
